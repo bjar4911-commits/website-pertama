@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tebak Buah 120</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #222;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .game-box {
+            background: #333;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            border: 4px solid #444;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        #fruit-display {
+            font-size: 100px; /* Ukuran gambar emoji */
+            background: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        #msg {
+            margin-top: 15px;
+            font-weight: bold;
+            height: 20px;
+        }
+        .game-over {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="go-screen" class="game-over">
+    <h1>GAME OVER! 💀</h1>
+    <p>Skor Akhir: <span id="final-score">0</span></p>
+    <button onclick="location.reload()" style="width: 200px;">Main Lagi</button>
+</div>
+
+<div class="game-box">
+    <div class="stats">
+        <div>Skor: <span id="score">0</span></div>
+        <div id="lives">❤️❤️❤️</div>
+    </div>
+
+    <div id="fruit-display">🍎</div>
+
+    <input type="text" id="input" placeholder="Ketik nama buah..." autocomplete="off">
+    <button onclick="tebak()">TEBAK!</button>
+    <div id="msg"></div>
+</div>
+
+<script>
+    // DAFTAR BUAH (Saya buatkan 20 contoh, anda bisa teruskan sampai 120)
+    const daftarBuah = [
+        { nama: "apel", emoji: "🍎" },
+        { nama: "pisang", emoji: "🍌" },
+        { nama: "semangka", emoji: "🍉" },
+        { nama: "anggur", emoji: "🍇" },
+        { nama: "jeruk", emoji: "🍊" },
+        { nama: "strawberry", emoji: "🍓" },
+        { nama: "nanas", emoji: "🍍" },
+        { nama: "mangga", emoji: "🥭" },
+        { nama: "ceri", emoji: "🍒" },
+        { nama: "lemon", emoji: "🍋" },
+        { nama: "pir", emoji: "🍐" },
+        { nama: "persik", emoji: "🍑" },
+        { nama: "kiwi", emoji: "🥝" },
+        { nama: "tomat", emoji: "🍅" },
+        { nama: "kelapa", emoji: "🥥" },
+        { nama: "melon", emoji: "🍈" },
+        { nama: "alpukat", emoji: "🥑" },
+        { nama: "terong", emoji: "🍆" },
+        { nama: "cabai", emoji: "🌶️" },
+        { nama: "jagung", emoji: "🌽" }
+        // Untuk mencapai 120, tambahkan buah lain seperti durian, rambutan, dll.
+    ];
+
+    let skor = 0;
+    let nyawa = 3;
+    let buahSekarang = {};
+
+    function acakBuah() {
+        const index = Math.floor(Math.random() * daftarBuah.length);
+        buahSekarang = daftarBuah[index];
+        document.getElementById('fruit-display').innerText = buahSekarang.emoji;
+        document.getElementById('input').value = "";
+        document.getElementById('input').focus();
+    }
+
+    function tebak() {
+        const jawaban = document.getElementById('input').value.toLowerCase().trim();
+        const msg = document.getElementById('msg');
+
+        if (jawaban === buahSekarang.nama) {
+            skor += 10;
+            document.getElementById('score').innerText = skor;
+            msg.innerText = "BENAR! ✨";
+            msg.style.color = "#27ae60";
+            setTimeout(() => {
+                msg.innerText = "";
+                acakBuah();
+            }, 800);
+        } else {
+            nyawa--;
+            updateNyawa();
+            msg.innerText = "SALAH! ❌";
+            msg.style.color = "#e74c3c";
+            
+            if (nyawa <= 0) {
+                document.getElementById('go-screen').style.display = 'flex';
+                document.getElementById('final-score').innerText = skor;
+            }
+        }
+    }
+
+    function updateNyawa() {
+        let h = "";
+        for(let i=0; i<nyawa; i++) h += "❤️";
+        document.getElementById('lives').innerText = h;
+    }
+
+    // Jalankan saat enter ditekan
+    document.getElementById('input').addEventListener("keyup", function(e) {
+        if (e.keyCode === 13) tebak();
+    });
+
+    // Mulai game
+    acakBuah();
+</script>
+
+</body>
+</html>
+
+     
